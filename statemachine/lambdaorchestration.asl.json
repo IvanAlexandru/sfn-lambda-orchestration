@@ -1,0 +1,25 @@
+{
+    "StartAt": "Multiply Vector",
+    "Comment": "Step Function Lambda Orchestration with S3 CSV input.",
+    "States": {
+      "Multiply Vector": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+          "FunctionName": "multiplyVectorLambda",
+          "Payload.$": "$"
+        },
+        "Next": "Find Min, Max, Average and store in S3 CSV"
+      },
+      "Find Min, Max, Average and store in S3 CSV": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+          "FunctionName": "minMaxAvgStoreLambda",
+          "Payload.$": "$"
+        },
+        "ResultPath": "$.recommended_type",
+        "End": true
+      }
+    }
+  }

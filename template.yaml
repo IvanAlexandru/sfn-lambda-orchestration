@@ -1,0 +1,35 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Step Function Lambda Orchestration with S3 CSV input
+
+Resources:
+  LambdaOrchestrationMachine:
+    Type: AWS::Serverless::StateMachine
+    Properties:
+      DefinitionUri: statemachine/lambdaorchestration.asl.json
+      Policies: 
+        - LambdaInvokePolicy:
+            FunctionName: multiplyVectorLambda
+        - LambdaInvokePolicy:
+            FunctionName: minMaxAvgStoreLambda
+
+  MultiplyVectorLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: multiplyVectorLambda
+      CodeUri: functions/multiply_vector_lambda/
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+
+  MinMaxAvgStoreLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: minMaxAvgStoreLambda
+      CodeUri: functions/min_max_avg_store_lambda/
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      Architectures:
+        - x86_64
